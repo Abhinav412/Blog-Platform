@@ -1,5 +1,5 @@
 // AllPosts.js
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -33,3 +33,4 @@ const AllPosts = () => {
 };
 
 export default AllPosts;
+*/

@@ -54,5 +54,6 @@ func main() {
 	})
 
 	// Run the server
-	router.Run(":3000")
+	log.Fatal(http.ListenAndServe(":3001", router))
+	router.Run(":3001")
 }
