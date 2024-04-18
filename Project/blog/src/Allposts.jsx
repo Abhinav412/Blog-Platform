@@ -1,8 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -10,25 +7,26 @@ const AllPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/posts/all');
+        const response = await axios.get('http://localhost:8080/api/posts');
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
+        // Handle errors appropriately (e.g., display error message to user)
       }
     };
 
     fetchPosts();
-  }, []);
+  }, []); // Run effect only once on component mount
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h2>All Posts</h2>
+    <div className="container mx-auto max-w-lg">
+      <h1 className="text-2xl font-bold mb-4">All Posts</h1>
       {posts.length > 0 ? (
         <ul>
           {posts.map((post) => (
-            <li key={post.ID} className="mb-4">
-              <h3>{post.Title}</h3>
-              <p>{post.Content}</p>
+            <li key={post.ID} className="border border-gray-300 p-3 mb-2">
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
             </li>
           ))}
         </ul>
@@ -39,5 +37,4 @@ const AllPosts = () => {
   );
 };
 
-
-export default AllPosts
+export default AllPosts;

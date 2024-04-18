@@ -56,6 +56,13 @@ const CreatePostForm = () => {
       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-700">
         Create Post
       </button>
+
+      <a
+              href="/allposts"
+              class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+            >
+              View all posts
+            </a>
     </form>
   );
 };
