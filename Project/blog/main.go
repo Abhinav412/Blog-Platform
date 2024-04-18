@@ -2,52 +2,94 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux" // Routing library
+	"github.com/rs/cors"     // CORS library
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type BlogPost struct {
+// Post struct to represent a blog post
+type Post struct {
+	ID      int    `json:"_id,omitempty" bson:"_id"` // Use int for ID (consider potential limitations)
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
 
-func main() {
-	// Initialize Gin-gonic router
-	router := gin.Default()
+// Global variables (replace with your connection details)
+var (
+	client *mongo.Client
+	db     *mongo.Database
+	nextID int // To track the next available ID (simple approach, not production-ready)
+)
 
-	// MongoDB connection setup
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+func main() {
+	// Connect to MongoDB
+	ctx := context.Background()
+	uri := "mongodb://localhost:27017" // Replace with your MongoDB connection URI
+	clientOptions := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(context.TODO())
+	defer client.Disconnect(ctx)
 
-	// Define MongoDB collection
-	collection := client.Database("myblog").Collection("posts")
+	// Get database reference
+	db = client.Database("blog") // Replace with your database name
 
-	// API endpoint for creating a new post
-	router.POST("/api/posts", func(c *gin.Context) {
-		var post BlogPost
-		if err := c.ShouldBindJSON(&post); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		// Insert the post into MongoDB
-		_, err := collection.InsertOne(context.TODO(), post)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create post"})
-			return
-		}
-
-		c.JSON(http.StatusCreated, gin.H{"message": "Post created successfully"})
+	// Routing setup with CORS
+	router := mux.NewRouter()
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"}, // Replace with your frontend origin
+		AllowedMethods: []string{"POST", "GET"},           // Allow POST and GET methods
+		AllowedHeaders: []string{"Content-Type"},          // Allow Content-Type header
 	})
+	handler := c.Handler(router)
 
-	// Run the server
-	router.Run(":6000")
+	router.HandleFunc("/api/posts", createPostHandler).Methods(http.MethodPost)
+	// ... (other routes if needed)
+
+	// Start server
+	fmt.Println("Server listening on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", handler))
+}
+
+// Function to handle creating a new post
+func createPostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Decode request body
+	var post Post
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&post)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Error decoding request body: %v", err)
+		return
+	}
+
+	// Assign next available ID
+	post.ID = nextID
+	nextID++ // Increment for next post
+
+	// Insert post into MongoDB
+	ctx := context.Background()
+	col := db.Collection("posts")     // Replace "posts" with your collection name
+	_, err = col.InsertOne(ctx, post) // Ignoring the returned insertion result (consider handling it)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error inserting post: %v", err)
+		return
+	}
+
+	// Respond with success message and the assigned ID
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Post created successfully", "id": post.ID})
 }
