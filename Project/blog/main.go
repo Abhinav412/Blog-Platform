@@ -42,18 +42,15 @@ func main() {
 	// Get database reference
 	db = client.Database("blog") // Replace with your database name
 
-<<<<<<< HEAD
 	// Routing setup with CORS
 	router := mux.NewRouter()
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://localhost:3000"}, // Replace with your frontend origin
 		AllowedMethods: []string{"POST", "GET"},           // Allow POST and GET methods
 		AllowedHeaders: []string{"Content-Type"},          // Allow Content-Type header
-=======
-	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		panic(err)
-	}
-
+	}})
 	// API endpoint for creating a new post
 	router.POST("/api/posts", func(c *gin.Context) {
 		var post BlogPost
@@ -70,11 +67,9 @@ func main() {
 		}
 
 		c.JSON(http.StatusCreated, gin.H{"message": "Post created successfully"})
->>>>>>> 0fbff581428ed9205ced5e72502ad86e40a3f8a3
 	})
 	handler := c.Handler(router)
 
-<<<<<<< HEAD
 	router.HandleFunc("/api/posts", createPostHandler).Methods(http.MethodPost)
 	// ... (other routes if needed)
 
@@ -117,9 +112,7 @@ func createPostHandler(w http.ResponseWriter, r *http.Request) {
 	// Respond with success message and the assigned ID
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Post created successfully", "id": post.ID})
-=======
 	// Run the server
 	log.Fatal(http.ListenAndServe(":3001", router))
 	router.Run(":3001")
->>>>>>> 0fbff581428ed9205ced5e72502ad86e40a3f8a3
 }
