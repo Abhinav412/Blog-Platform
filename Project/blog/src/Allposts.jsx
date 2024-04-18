@@ -1,5 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
+
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -35,5 +38,6 @@ const AllPosts = () => {
     </div>
   );
 };
+
 
 export default AllPosts
