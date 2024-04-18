@@ -37,4 +37,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default AllPostsrender;
