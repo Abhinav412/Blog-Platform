@@ -64,13 +64,13 @@ const CreatePost = () => {
             </div>
             <button
               type="submit"
-              className="inline-block py-3 px-6 text-lg font-semibold text-white bg-blue-700 rounded-md hover:bg-blue-800"
+              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 mr-2"
             >
               Create Post
             </button>
             <a
               href="/allposts"
-              class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+              class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 mr-2"
             >
               View all posts 
             </a>

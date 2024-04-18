@@ -7,9 +7,6 @@ const Welcome = () =>  {
             Welcome to the Blog
           </h1>
           <br/>
-          <p class="mb-8 font-normal text-gray-500 lg:text-3xl sm:px-16 lg:px-48 dark:text-gray-400">
-            This is Go Lang Project
-          </p>
           <br/>
           <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
             <a

@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type BlogPost struct {
@@ -30,6 +31,10 @@ func main() {
 	// Define MongoDB collection
 	collection := client.Database("myblog").Collection("posts")
 
+	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		panic(err)
+	}
+
 	// API endpoint for creating a new post
 	router.POST("/api/posts", func(c *gin.Context) {
 		var post BlogPost
@@ -49,5 +54,5 @@ func main() {
 	})
 
 	// Run the server
-	router.Run(":6000")
+	router.Run(":3000")
 }
