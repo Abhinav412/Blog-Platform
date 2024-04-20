@@ -10,8 +10,8 @@ import (
 )
 
 type Comment struct {
-	ID      string json:"id" bson:"_id,omitempty"
-	Content string json:"content" bson:"content"
+	ID      string `json:"id" bson:"_id,omitempty"`
+	Content string `json:"content" bson:"content"`
 }
 
 var collection *mongo.Collection
