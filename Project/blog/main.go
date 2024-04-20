@@ -48,35 +48,10 @@ func main() {
 		AllowedOrigins: []string{"http://localhost:3000"}, // Replace with your frontend origin
 		AllowedMethods: []string{"POST", "GET"},           // Allow POST and GET methods
 		AllowedHeaders: []string{"Content-Type"},          // Allow Content-Type header
-<<<<<<< HEAD
 	})
 	handler := c.Handler(router)
 
 	// Route handlers
-=======
-		if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-		panic(err)
-	}})
-	// API endpoint for creating a new post
-	router.POST("/api/posts", func(c *gin.Context) {
-		var post BlogPost
-		if err := c.ShouldBindJSON(&post); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		// Insert the post into MongoDB
-		_, err := collection.InsertOne(context.TODO(), post)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create post"})
-			return
-		}
-
-		c.JSON(http.StatusCreated, gin.H{"message": "Post created successfully"})
-	})
-	handler := c.Handler(router)
-
->>>>>>> 942bd7444834c27788f409ec51a831963a1f76aa
 	router.HandleFunc("/api/posts", createPostHandler).Methods(http.MethodPost)
 	router.HandleFunc("/api/posts", getAllPostsHandler).Methods(http.MethodGet)
 
@@ -119,7 +94,6 @@ func createPostHandler(w http.ResponseWriter, r *http.Request) {
 	// Respond with success message and the assigned ID
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Post created successfully", "id": post.ID})
-<<<<<<< HEAD
 }
 
 // Function to handle fetching all posts
@@ -156,9 +130,4 @@ func getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	// Respond with all retrieved posts
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(posts)
-=======
-	// Run the server
-	log.Fatal(http.ListenAndServe(":3001", router))
-	router.Run(":3001")
->>>>>>> 942bd7444834c27788f409ec51a831963a1f76aa
 }
