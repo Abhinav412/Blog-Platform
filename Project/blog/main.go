@@ -58,6 +58,7 @@ func main() {
 
 	// CORS configuration
 	c := cors.New(cors.Options{
+<<<<<<< HEAD
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
@@ -67,6 +68,15 @@ func main() {
 	handler := c.Handler(router)
 	router.HandleFunc("/api/users/signup", signupHandler).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/login", loginHandler).Methods(http.MethodPost)
+=======
+		AllowedOrigins: []string{"http://localhost:3000"}, // Replace with your frontend origin
+		AllowedMethods: []string{"POST", "GET"},           // Allow POST and GET methods
+		AllowedHeaders: []string{"Content-Type"},          // Allow Content-Type header
+	})
+	handler := c.Handler(router)
+
+	// Route handlers
+>>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
 	router.HandleFunc("/api/posts", createPostHandler).Methods(http.MethodPost)
 	router.HandleFunc("/api/posts", getPostsByAuthorHandler).Methods(http.MethodGet)
 
@@ -116,6 +126,10 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
+<<<<<<< HEAD
+=======
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Post created successfully", "id": post.ID})
+>>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
 }
 
 // hashPassword hashes the given password using bcrypt
@@ -261,6 +275,7 @@ func getPostsByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 	// Encode posts as JSON and write to response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(posts)
+<<<<<<< HEAD
 }
 func getPostByIDHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
@@ -332,4 +347,6 @@ func getNextPostID(ctx context.Context) (string, error) {
 	}
 
 	return strconv.Itoa(counter.Value), nil
+=======
+>>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
 }
