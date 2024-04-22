@@ -1,22 +1,31 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Welcome from "./welcome";
 import Home from "./home";
-import CreatePostForm from "./CreatePost";
+import Signup from './signup';
+import Login from './login'; // Import login component
+import CreatePost from './CreatePost';
 import AllPostsrender from "./Allposts";
 
 
+import AuthContext from './AuthContext'; // Import AuthContext
+
 function App() {
+  const [authState, setAuthState] = useState({ loggedIn: false, token: null });
+
   return (
-    <BrowserRouter>
-      <Routes>
+    <AuthContext.Provider value={{ authState, setAuthState }}> {/* Wrap with Provider */}
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<Welcome/>}/>
         <Route path="/home" element={<Home/>}/>
-        <Route path="/createpost" element={<CreatePostForm/>}/>
+        <Route path="/createpost" element={<CreatePost/>}/>
         <Route path="/allposts" element={<AllPostsrender />} />
-
-      </Routes>
-    </BrowserRouter>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<Signup/>}/>
+        </Routes>
+      </BrowserRouter>
+    </AuthContext.Provider>
   );
 }
 

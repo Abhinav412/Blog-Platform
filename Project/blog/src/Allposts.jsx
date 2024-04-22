@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AllPosts = () => {
+const AllPostsrender = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
