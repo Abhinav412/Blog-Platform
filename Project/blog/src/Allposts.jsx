@@ -1,15 +1,22 @@
-// AllPosts.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch('/api/allposts')
-      .then(response => response.json())
-      .then(data => setPosts(data))
-      .catch(error => console.error('Error fetching posts:', error));
-  }, []);
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/posts');
+        setPosts(response.data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Handle errors appropriately (e.g., display error message to user)
+      }
+    };
+
+    fetchPosts();
+  }, []); // Run effect only once on component mount
 
   return (
     <section>
