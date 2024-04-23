@@ -74,7 +74,7 @@ function CreatePost() {
     };
 
     return (
-        <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-lg shadow-md">
+        <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-lg shadow-md"style={{ backgroundImage: "url('https://images.unsplash.com/photo-1696185570507-2d1283399560?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }} >
             <h2 className="text-2xl mb-4">Create a New Post</h2>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
             <form onSubmit={handleSubmit}>
@@ -112,12 +112,12 @@ function CreatePost() {
             {lastPostAuthor && (
                 <button onClick={handleViewUserPosts} className="mt-4 bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-300">View User's Posts</button>
             )}
-            <h2 className="text-xl mt-8">User's Posts</h2>
+            <h2 className="text-xl mt-8">Author's Posts</h2>
             <ul>
                 {userPosts.map((post) => (
                     <li key={post._id} className="mt-2">
                         <strong>{post.title}</strong>: {post.content}
-                        <button onClick={() => handleDeletePost(post._id)} className="ml-2 bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
+                        <button onClick={() => handleDeletePost(post._id)} className="ml-2 bg-red-500 text-white py-1 px-2 rounded-md hover:bg-blue-600 transition duration-300">Delete</button>
                     </li>
                 ))}
             </ul>
