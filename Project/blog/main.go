@@ -25,16 +25,16 @@ type User struct {
 }
 
 type Post struct {
-	ID        string    `json:"_id,omitempty" bson:"_id"`
+	ID        string    `json:"_id,omitempty" bson:"_id,omitempty"`
 	UserID    string    `json:"userId"`
-	Author    string    `json:"author"`
 	Title     string    `json:"title"`
+	Author    string    `json:"author"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 }
 
-// Function to connect to MongoDB (moved outside main for reusability)
+// Function to connect to MongoDB (moved outside main for reusability)Author    string    `json:"author"`
 var (
 	client *mongo.Client
 	db     *mongo.Database
@@ -58,7 +58,6 @@ func main() {
 
 	// CORS configuration
 	c := cors.New(cors.Options{
-<<<<<<< HEAD
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
@@ -68,17 +67,10 @@ func main() {
 	handler := c.Handler(router)
 	router.HandleFunc("/api/users/signup", signupHandler).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/login", loginHandler).Methods(http.MethodPost)
-=======
-		AllowedOrigins: []string{"http://localhost:3000"}, // Replace with your frontend origin
-		AllowedMethods: []string{"POST", "GET"},           // Allow POST and GET methods
-		AllowedHeaders: []string{"Content-Type"},          // Allow Content-Type header
-	})
-	handler := c.Handler(router)
-
-	// Route handlers
->>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
 	router.HandleFunc("/api/posts", createPostHandler).Methods(http.MethodPost)
 	router.HandleFunc("/api/posts", getPostsByAuthorHandler).Methods(http.MethodGet)
+
+	router.HandleFunc("/api/posts/{id}", deletePostHandler).Methods(http.MethodDelete)
 
 	// Handle preflight requests explicitly
 	router.Methods(http.MethodOptions).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -126,10 +118,6 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-<<<<<<< HEAD
-=======
-	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Post created successfully", "id": post.ID})
->>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
 }
 
 // hashPassword hashes the given password using bcrypt
@@ -275,7 +263,6 @@ func getPostsByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 	// Encode posts as JSON and write to response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(posts)
-<<<<<<< HEAD
 }
 func getPostByIDHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
@@ -347,6 +334,73 @@ func getNextPostID(ctx context.Context) (string, error) {
 	}
 
 	return strconv.Itoa(counter.Value), nil
-=======
->>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2
+}
+
+// Add a new route handler to fetch all posts
+
+func getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	col := db.Collection("posts")
+
+	// Find all posts
+	cursor, err := col.Find(ctx, bson.M{})
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error fetching posts: %v", err)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	// Initialize a slice to hold posts
+	var posts []Post
+
+	// Iterate over the cursor and decode each document
+	for cursor.Next(ctx) {
+		var post Post
+
+		// Decode document into Post struct
+		if err := cursor.Decode(&post); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Error decoding post: %v", err)
+			return
+		}
+
+		posts = append(posts, post)
+	}
+
+	// Check if cursor has any errors
+	if err := cursor.Err(); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Cursor error: %v", err)
+		return
+	}
+
+	// Encode posts as JSON and write to response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error encoding posts: %v", err)
+		return
+	}
+}
+func deletePostHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	col := db.Collection("posts")
+
+	// Parse post title from URL parameters
+	postTitle := mux.Vars(r)["title"]
+
+	// Define filter to find post by its title
+	filter := bson.M{"title": postTitle}
+
+	// Delete the post
+	_, err := col.DeleteOne(ctx, filter)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error deleting post: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Post deleted successfully")
 }

@@ -63,7 +63,16 @@ function CreatePost() {
         }
     };
 
-<<<<<<< HEAD
+    const handleDeletePost = async (postId) => {
+        try {
+            await axios.delete(`http://localhost:8080/api/posts/${postId}`);
+            setUserPosts(userPosts.filter((post) => post._id !== postId));
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            setErrorMessage('Error deleting post. Please try again later.');
+        }
+    };
+
     return (
         <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl mb-4">Create a New Post</h2>
@@ -108,6 +117,7 @@ function CreatePost() {
                 {userPosts.map((post) => (
                     <li key={post._id} className="mt-2">
                         <strong>{post.title}</strong>: {post.content}
+                        <button onClick={() => handleDeletePost(post._id)} className="ml-2 bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
                     </li>
                 ))}
             </ul>
@@ -118,51 +128,3 @@ function CreatePost() {
 export default CreatePost;
 
 
-=======
-  return (
-    <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
-      <div className=" mt-16 flex justify-center">
-      <label htmlFor="title" className="text-sm font-medium">
-        Title:
-      </label>
-      <input
-        type="text"
-        id="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-        className=" rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-      />
-      </div>
-      <div className="flex justify-center">
-      <label htmlFor="content" className="text-sm font-medium">
-        Content:
-      </label>
-      <textarea
-        id="content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        required
-        className="w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 h-24"
-      />
-      </div>
-
-      <div className="flex justify-center">
-      <button type="submit" className="items-center bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-700">
-        Create Post
-      </button>
-      </div>
-      <div className="flex justify-center">
-      <a
-              href="/allposts"
-              class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
-            >
-              View all posts
-            </a>
-            </div>
-    </form>
-  );
-};
-
-export default CreatePostForm;
->>>>>>> ed02bd0251a08728dfcdf00c6f7ad330df7451b2

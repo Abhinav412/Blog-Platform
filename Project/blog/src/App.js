@@ -5,7 +5,7 @@ import Home from "./home";
 import Signup from './signup';
 import Login from './login'; // Import login component
 import CreatePost from './CreatePost';
-import AllPostsrender from "./Allposts";
+import AllPosts from "./Allposts";
 
 
 import AuthContext from './AuthContext'; // Import AuthContext
@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<Welcome/>}/>
         <Route path="/home" element={<Home/>}/>
         <Route path="/createpost" element={<CreatePost/>}/>
-        <Route path="/allposts" element={<AllPostsrender />} />
+        <Route path="/allposts" element={<AllPosts />} />
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
         </Routes>
